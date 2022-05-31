@@ -7,7 +7,10 @@
 - [Xposed moduleの作成](#xposed-moduleの作成)
   - [プロジェクトの作成](#プロジェクトの作成)
   - [Xposedで使うための設定](#xposedで使うための設定)
+    - [依存関係の追加](#依存関係の追加)
+    - [メタデータの追加](#メタデータの追加)
 - [処理の記述](#処理の記述)
+  - [xposed_init](#xposed_init)
 - [蛇足](#蛇足)
 
 ## 注意
@@ -26,6 +29,8 @@
 ~~泥側の環境構築に関しては割愛します~~
 
 ### LSPosedの導入
+
+root化は端末によってやり方が異なるので端折ります
 
 Zygisk（Magisk v24以降）
 
@@ -48,6 +53,8 @@ zygisk-release.zipを落としてMagiskからインスコ
 
 ### Xposedで使うための設定
 
+#### 依存関係の追加
+
 `settings.gradle` を開く
 
 ```gradle
@@ -63,7 +70,9 @@ dependencyResolutionManagement {
 
 ↑ `maven { url "https://api.xposed.info/" }` を追加する
 
-`app/build.gradle` を開く
+___
+
+次に `app/build.gradle` を開く
 
 ```gradle
 dependencies {
@@ -73,6 +82,8 @@ dependencies {
 ```
 
 ↑の文を追加する
+
+#### メタデータの追加
 
 `app/src/main/AndroidManifest.xml` を開く
 
@@ -88,11 +99,28 @@ dependencies {
     <meta-data
         android:name="xposedminversion"
         android:value="82" />
+    <meta-data
+        android:name="xposedscope"
+        android:value="android;com.android.chrome" />
 
-</application>
+</application>  
 ```
 
-↑の文を追加（各値は場合によって変わる）
+↑の文を追加（各値の有無や内容は場合によって変わる）
+
+`xposedmodule`  
+おそらく必須
+
+`xposeddescription`  
+モジュールの説明　下画像参照
+
+`xposedminversion`  
+基本は82でいいっぽい？と思ってたら93が最新らしい
+
+`xposedscope`  
+モジュールを有効にしたときLSPosed側で自動的に選択されるスコープ  
+"Recommended" のやつ  
+[android:resource](https://developer.android.com/guide/topics/resources/providing-resources)でも指定できる
 
 ビルドできたら多分成功
 
@@ -104,7 +132,12 @@ dependencies {
 
 ## 処理の記述
 
-工事中……
+### xposed_init
+
+`app/src/main/assets/` に `xposed_init` という名前のファイルを作成する
+
+```text
+```
 
 ## 蛇足
 
