@@ -10,8 +10,11 @@
     - [依存関係の追加](#依存関係の追加)
     - [メタデータの追加](#メタデータの追加)
 - [処理の記述](#処理の記述)
+  - [main.kt](#mainkt)
+  - [構文とか](#構文とか)
   - [xposed_init](#xposed_init)
 - [蛇足](#蛇足)
+- [参考](#参考)
 
 ## 注意
 
@@ -83,6 +86,8 @@ dependencies {
 
 ↑の文を追加する
 
+___
+
 #### メタデータの追加
 
 `app/src/main/AndroidManifest.xml` を開く
@@ -108,6 +113,8 @@ dependencies {
 
 ↑の文を追加（各値の有無や内容は場合によって変わる）
 
+___
+
 `xposedmodule`  
 おそらく必須
 
@@ -115,12 +122,15 @@ dependencies {
 モジュールの説明　下画像参照
 
 `xposedminversion`  
-基本は82でいいっぽい？と思ってたら93が最新らしい
+~~基本は82でいいっぽい？と思ってたら93が最新らしい~~  
+[New XSharedPreferences](https://github.com/LSPosed/LSPosed/wiki/New-XSharedPreferences)で使うとのこと
 
 `xposedscope`  
 モジュールを有効にしたときLSPosed側で自動的に選択されるスコープ  
 "Recommended" のやつ  
 [android:resource](https://developer.android.com/guide/topics/resources/providing-resources)でも指定できる
+
+___
 
 ビルドできたら多分成功
 
@@ -132,12 +142,43 @@ dependencies {
 
 ## 処理の記述
 
+### main.kt
+
+プロジェクトのソースディレクトリ（`app/src/main/java/……/`）に適当な名前のファイルを作成
+
+今回は `main.kt` にした
+
+```kotlin
+package com.example.module_test;
+
+import de.robv.android.xposed.IXposedHookLoadPackage
+import de.robv.android.xposed.XposedBridge
+import de.robv.android.xposed.callbacks.XC_LoadPackage
+import de.robv.android.xposed.XSharedPreferences
+
+class main : IXposedHookLoadPackage {
+    // ここに処理を書く
+    @Throws(Throwable::class)
+    override fun handleLoadPackage(lparam: XC_LoadPackage.LoadPackageParam) {
+    }
+}
+```
+
+中身は場合によって変わる
+
+### 構文とか
+
+追記修正中……
+
 ### xposed_init
 
 `app/src/main/assets/` に `xposed_init` という名前のファイルを作成する
 
 ```text
+com.example.module_test.main
 ```
+
+ここに書いたクラスが最初に読み込まれる
 
 ## 蛇足
 
@@ -177,3 +218,11 @@ dependenciesの行では
 と言われる
 
 「providedは非推奨の書き方だからcompileOnlyに変えてね」とのこと
+
+## 参考
+
+[XposedBridge Wiki](https://github.com/rovo89/XposedBridge/wiki/Development-tutorial)
+
+[LSPosed Wiki](https://github.com/LSPosed/LSPosed/wiki)
+
+[Xposed Framework API](https://api.xposed.info/reference/packages.html)
