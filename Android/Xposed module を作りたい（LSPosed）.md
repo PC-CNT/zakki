@@ -155,9 +155,13 @@ import de.robv.android.xposed.IXposedHookLoadPackage
 import de.robv.android.xposed.XposedBridge
 import de.robv.android.xposed.callbacks.XC_LoadPackage
 import de.robv.android.xposed.XSharedPreferences
+import de.robv.android.xposed.IXposedHookZygoteInit
 
-class main : IXposedHookLoadPackage {
+class main : IXposedHookZygoteInit, IXposedHookLoadPackage {
     // ここに処理を書く
+    @Throws(Throwable::class)
+    override fun initZygote(startupParam: IXposedHookZygoteInit.StartupParam) {
+    }
     @Throws(Throwable::class)
     override fun handleLoadPackage(lparam: XC_LoadPackage.LoadPackageParam) {
     }
